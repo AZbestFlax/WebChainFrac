@@ -119,3 +119,11 @@ input[type="button"]:hover {
     background-position: 0 -15px;
     transition: background-position 0.1s linear 0s;
 }
+
+input[type="button"]:focus {
+    background-color: #e6e6e6;
+    background-position: 0 -15px;
+    transition: background-position 0.1s linear 0s;
+    outline: thin dotted #333;
+    outline-offset: -2px;
+}
