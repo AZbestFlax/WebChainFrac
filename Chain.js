@@ -58,9 +58,40 @@ Frac.prototype.toString = function() {
 };
 
 Frac.prototype.toTexNotation = function() {
-    var s = this.k + "\\cdot (" + this.n + "\\sqrt{" + this.f + "})";
+    this.simplify();
+    var s="";
+    var sig=false;
+    if (this.f==0) {
+        if (this.n==0) {
+            return "$$0$$";
+        } else {
+            sig = this.k * this.n < 0;
+            s = Math.abs(this.k*this.n);
+        }
+    } else {
+        if (this.n==0) {
+            sig = this.k<0;
+            s = "\\sqrt{" + this.f + "}";
+            var tt=Math.abs(this.k);
+            if (tt!=1) s = tt+s;
+        } else {
+            sig = this.k<0 && this.n>0;
+            if (this.n>0) {
+                s = Math.abs(this.n) + "+\\sqrt{" + this.f + "}";
+            } else {
+                if (this.k>0) {
+                    s = this.n + "+\\sqrt{" + this.f + "}";
+                } else {
+                    s = Math.abs(this.n) + "-\\sqrt{" + this.f + "}";
+                }
+            }
+            var tt=Math.abs(this.k);
+            if (tt!=1) s = tt+"\\cdot("+s+")";
+        }
+    }
     if (this.d!=1) s = "\\frac{" + s + "}{" + this.d + "}";
-    return s;
+    if (sig) s="-"+s;
+    return "$$"+s+"$$";
 }
 
 Frac.prototype.equalsNumber = function(value) {
@@ -340,15 +371,14 @@ function Chain(parameters) {
     if (parameters.frac === undefined) this.f = new Frac({radical: 0, term: 0, denominator: 0, coefficient: 0});
         else this.f = parameters.frac;
     if (parameters.arrayVariables === undefined) this.v = [];
-        else this.v = parameters.arrayVariables;
-    var startPeriod = parameters.startPeriod;
-    var endPeriod = parameters.endPeriod;
-    var p = parameters.isPeriodical;
-    /* this.f = frac; 	     	 дріб                                     */
-    /* this.v = arrV;	         масив чисел                            */
-    this.p = p; 		    /* періодичність (boolean)                  */
-	this.sp = startPeriod;	/* номер елемента початку періоду в масиві  */
-    this.ep = endPeriod;	/* номер елемента кінця періоду в масиві    */
+     else {
+        this.v = parameters.arrayVariables;
+        if (! (parameters.startPeriod === undefined)) {
+            this.sp = parameters.startPeriod;
+            this.ep = this.v.length-1;
+            this.p = true;
+        }
+    }
 }
 
 Chain.prototype.convertToChain = function() {
@@ -438,18 +468,17 @@ function mainWorkFunction() {
 
 function testChain() {
     /*
-    var f = new Frac({radical: 8, term: 0, denominator: 1, coefficient: 1});
+    var f = new Frac({radical: 7, term: -4, denominator: -5, coefficient: 5});
     var cf = new Chain({frac: f});
-    alert(cf.toStringChain());
-    alert(cf.toStringFrac());
     //*/
 
     //*
-    var cf = new Chain({arrayVariables: [2,1,1,1,4], startPeriod: 1, endPeriod: 4, isPeriodical: true});
+    var cf = new Chain({arrayVariables: [1], startPeriod: 0});
     //alert(cf.toStringFrac());
     //alert(cf.toStringChain());
-    var obj = document.getElementById('formula');
-    obj.innerHTML = "$$" + cf.toTexNotation() + "$$";
-                                                                        //jsMath.ConvertTeX(obj);
     //*/
+    var obj = document.getElementById('formula');
+    obj.innerHTML = cf.toTexNotation();
+    jsMath.ConvertTeX(obj);
+    jsMath.ProcessBeforeShowing(obj);
 }
