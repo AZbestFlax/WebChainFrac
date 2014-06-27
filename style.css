@@ -127,3 +127,7 @@ input[type="button"]:focus {
     outline: thin dotted #333;
     outline-offset: -2px;
 }
+
+#formula {
+    background-color: #44c1cc;
+}

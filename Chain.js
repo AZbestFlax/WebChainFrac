@@ -54,7 +54,7 @@ Frac.prototype.setParam = function(_f,_n,_d) {
 };
 
 Frac.prototype.toString = function() {
-    return this.k + "*(" + this.n + "+V" + this.f + ")/" + this.d;
+    return this.k + "*(" + this.n + '+ \u221A' + this.f + ")/" + this.d;
 };
 
 Frac.prototype.equalsNumber = function(value) {
