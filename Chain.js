@@ -57,6 +57,12 @@ Frac.prototype.toString = function() {
     return this.k + "*(" + this.n + '+ \u221A' + this.f + ")/" + this.d;
 };
 
+Frac.prototype.toTexNotation = function() {
+    var s = this.k + "\\cdot (" + this.n + "\\sqrt{" + this.f + "})";
+    if (this.d!=1) s = "\\frac{" + s + "}{" + this.d + "}";
+    return s;
+}
+
 Frac.prototype.equalsNumber = function(value) {
     return (this.f == 0)&&
            (this.n == value)&&
@@ -418,6 +424,11 @@ Chain.prototype.toStringFrac = function() {
     return this.f.toString();
 };
 
+Chain.prototype.toTexNotation = function() {
+    if (this.f.d == 0) this.converToFrac();
+    return this.f.toTexNotation();
+};
+
 /*========================================= TESTING FUNCTIONS ==============================================*/
 function mainWorkFunction() {
     var fr = new Frac({radical: 3, term: 2, denominator: 2, coefficient: 1});
@@ -425,7 +436,7 @@ function mainWorkFunction() {
 	alert(chain.toString());
 }
 
-function testPoly() {
+function testChain() {
     /*
     var f = new Frac({radical: 8, term: 0, denominator: 1, coefficient: 1});
     var cf = new Chain({frac: f});
@@ -435,7 +446,10 @@ function testPoly() {
 
     //*
     var cf = new Chain({arrayVariables: [2,1,1,1,4], startPeriod: 1, endPeriod: 4, isPeriodical: true});
-    alert(cf.toStringFrac());
-    alert(cf.toStringChain());
+    //alert(cf.toStringFrac());
+    //alert(cf.toStringChain());
+    var obj = document.getElementById('formula');
+    obj.innerHTML = "$$" + cf.toTexNotation() + "$$";
+                                                                        //jsMath.ConvertTeX(obj);
     //*/
 }
